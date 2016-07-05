@@ -1,0 +1,16 @@
+{
+  "name": "pomo-con",
+  "version": "1.0.0",
+  "description": "Pomodoro counter for console",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt Stasch",
+  "license": "ISC",
+  "dependencies": {
+    "asciimo": "^0.3.1",
+    "moment": "^2.14.1"
+    "clear": "0.0.1"
+  }
+}
