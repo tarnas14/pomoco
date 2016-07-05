@@ -10,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "asciimo": "^0.3.1",
+    "clear": "0.0.1",
+    "colors": "^1.1.2",
     "moment": "^2.14.1"
-    "clear": "0.0.1"
   }
 }
