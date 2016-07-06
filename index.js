@@ -6,6 +6,7 @@ const asciimo = require('asciimo').Figlet;
 const moment  = require('moment');
 const clear   = require('clear');
 const colors  = require('colors');
+const notifier = require('node-notifier');
 
 const REFRESH_RATE = 250; // ms
 
@@ -28,7 +29,7 @@ const render = (time, color) => {
   asciimo.write(time, FONT, (art) => {
     clear();
     process.stdout.write('\r\n');
-    util.puts(color === 'red' ? art.red : art.green); 
+    util.puts(color === 'red' ? art.red : art.green);
     asciimo.write(time, FONT, (art) => {
 
     });
@@ -50,8 +51,25 @@ let BREAK     = Number(parseArgs(1, 5));  // m
 let FONT = parseArgs(2, 'Colossal');
 
 // -----------------------------------------------------
-let pend = moment().add(POMODORO, 'm');
-let bend = moment().add(POMODORO + BREAK, 'm');
+let pend, bend;
+
+const buildNotification = message => {
+  return {
+    title: 'POMOCO',
+    message
+  };
+};
+
+const startPomodoro = () => {
+  pend = moment().add(POMODORO, 'm');
+  bend = moment().add(POMODORO + BREAK, 'm');
+
+  const now = moment();
+  setTimeout(() => notifier.notify(buildNotification('end of POMODORO\nstarting BREAK')), pend.diff(now)).unref();
+  setTimeout(() => notifier.notify(buildNotification('end of BREAK\nstarting POMODORO')), bend.diff(now)).unref();
+}
+
+startPomodoro();
 
 const timer = setInterval(() => {
   const now = moment();
@@ -67,7 +85,6 @@ const timer = setInterval(() => {
         'green'
     );
   } else {
-    pend = moment().add(POMODORO, 'm');
-    bend = moment().add(POMODORO + BREAK, 'm'); 
+    startPomodoro();
   }
 }, REFRESH_RATE);
