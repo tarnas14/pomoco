@@ -45,8 +45,8 @@ const parseArgs = (idx, def) => {
 
 // -----------------------------------------------------
 
-let POMODORO  = parseArgs(0, 25); // m
-let BREAK     = parseArgs(1, 5);  // m
+let POMODORO  = Number(parseArgs(0, 25)); // m
+let BREAK     = Number(parseArgs(1, 5));  // m
 let FONT = parseArgs(2, 'Colossal');
 
 // -----------------------------------------------------
