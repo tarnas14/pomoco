@@ -7,6 +7,12 @@ const moment  = require('moment');
 const clear   = require('clear');
 const colors  = require('colors');
 const notifier = require('node-notifier');
+const program = require('commander');
+
+program
+  .usage('<pomodoroLength> <breakLength> [options]')
+  .option('-b, --startWithBreak', 'will start counting time from break')
+  .parse(process.argv);
 
 const REFRESH_RATE = 250; // ms
 
@@ -37,21 +43,42 @@ const render = (time, color) => {
 };
 
 const parseArgs = (idx, def) => {
-  if (process.argv.length <= (2 + idx)) {
+  if (program.args.length <= (idx)) {
     return def;
   }
 
-  return process.argv[2 + idx];
+  return program.args[idx];
+};
+
+const State = {
+  POMODORO: 'pomodoro',
+  BREAK: 'break',
 };
 
 // -----------------------------------------------------
 
-let POMODORO  = Number(parseArgs(0, 25)); // m
-let BREAK     = Number(parseArgs(1, 5));  // m
-let FONT = parseArgs(2, 'Colossal');
+const intervalLengths = {
+  [State.POMODORO]: Number(parseArgs(0, 25)),
+  [State.BREAK]: Number(parseArgs(1, 5))
+}
+
+const FONT = parseArgs(2, 'Colossal');
 
 // -----------------------------------------------------
-let pend, bend;
+
+let timerEnd;
+let state = program.startWithBreak
+  ? State.BREAK
+  : State.POMODORO;
+
+const nextState = (currentState) => currentState === State.POMODORO
+    ? State.BREAK
+    : State.POMODORO;
+
+const messages = {
+  [State.POMODORO]: 'end of POMODORO\nstarting BREAK',
+  [State.BREAK]: 'end of BREAK\nstarting POMODORO'
+};
 
 const buildNotification = message => {
   return {
@@ -61,30 +88,29 @@ const buildNotification = message => {
 };
 
 const startPomodoro = () => {
-  pend = moment().add(POMODORO, 'm');
-  bend = moment().add(POMODORO + BREAK, 'm');
+  timerEnd = moment().add(intervalLengths[state], 'm');
 
   const now = moment();
-  setTimeout(() => notifier.notify(buildNotification('end of POMODORO\nstarting BREAK')), pend.diff(now)).unref();
-  setTimeout(() => notifier.notify(buildNotification('end of BREAK\nstarting POMODORO')), bend.diff(now)).unref();
+  setTimeout(() => notifier.notify(buildNotification(messages[state])), timerEnd.diff(now)).unref();
 }
 
 startPomodoro();
 
+const timerColours = {
+  [State.POMODORO]: 'red',
+  [State.BREAK]: 'green'
+};
+
 const timer = setInterval(() => {
   const now = moment();
 
-  if (now.isBefore(pend)) {
+  if (now.isBefore(timerEnd)) {
     render(
-        formatTime(now, pend),
-        'red'
-    );
-  } else if(now.isBefore(bend)) {
-    render(
-        formatTime(now, bend),
-        'green'
+        formatTime(now, timerEnd),
+        timerColours[state]
     );
   } else {
+    state = nextState(state);
     startPomodoro();
   }
 }, REFRESH_RATE);
