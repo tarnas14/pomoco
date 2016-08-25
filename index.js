@@ -1,17 +1,16 @@
 'use strict';
 
-const util    = require('util');
 const process = require('process');
-const asciimo = require('asciimo').Figlet;
 const moment  = require('moment');
-const clear   = require('clear');
 const colors  = require('colors');
 const notifier = require('node-notifier');
 const program = require('commander');
+const renderFactory = require('./renderFactory');
 
 program
   .usage('<pomodoroLength> <breakLength> [options]')
   .option('-b, --startWithBreak', 'will start counting time from break')
+  .option('-p, --plainText', 'remaining time will be displayed in a single line')
   .parse(process.argv);
 
 const REFRESH_RATE = 250; // ms
@@ -30,17 +29,7 @@ const formatTime = (a,b) => {
   return t.format('mm:ss');
 };
 
-const render = (time, color) => {
-  clear();
-  asciimo.write(time, FONT, (art) => {
-    clear();
-    process.stdout.write('\r\n');
-    util.puts(color === 'red' ? art.red : art.green);
-    asciimo.write(time, FONT, (art) => {
-
-    });
-  });
-};
+const render = renderFactory(program);
 
 const parseArgs = (idx, def) => {
   if (program.args.length <= (idx)) {
@@ -61,8 +50,6 @@ const intervalLengths = {
   [State.POMODORO]: Number(parseArgs(0, 25)),
   [State.BREAK]: Number(parseArgs(1, 5))
 }
-
-const FONT = parseArgs(2, 'Colossal');
 
 // -----------------------------------------------------
 
