@@ -3,6 +3,7 @@
 const util    = require('util')
 const asciimo = require('asciimo').Figlet
 const clear   = require('clear')
+const colors = require('colors/safe')
 
 const fancyRender = (time, color) => {
   const FONT = 'Colossal'
@@ -17,7 +18,7 @@ const fancyRender = (time, color) => {
 
 const plainRender = (time, color) => {
   clear()
-  console.log(time)
+  console.log(colors[color](time))
 }
 
 module.exports = ({plainText}) => plainText ? plainRender : fancyRender
