@@ -84,8 +84,8 @@ const startPomodoro = () => {
 startPomodoro();
 
 const timerColours = {
-  [State.POMODORO]: 'red',
-  [State.BREAK]: 'green'
+  [State.POMODORO]: 'cyan',
+  [State.BREAK]: 'yellow'
 };
 
 const timer = setInterval(() => {
