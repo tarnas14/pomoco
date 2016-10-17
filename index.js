@@ -11,6 +11,8 @@ program
   .usage('<pomodoroLength> <breakLength> [options]')
   .option('-b, --startWithBreak', 'will start counting time from break')
   .option('-p, --plainText', 'remaining time will be displayed in a single line')
+  .option('-P, --pomodoroColor <n>', 'timer color when pomodoro is running', 'red')
+  .option('-B, --breakColor <n>', 'timer color when break is running', 'green')
   .parse(process.argv);
 
 const REFRESH_RATE = 250; // ms
@@ -84,8 +86,8 @@ const startPomodoro = () => {
 startPomodoro();
 
 const timerColours = {
-  [State.POMODORO]: 'cyan',
-  [State.BREAK]: 'yellow'
+  [State.POMODORO]: program.pomodoroColor,
+  [State.BREAK]: program.breakColor 
 };
 
 const timer = setInterval(() => {

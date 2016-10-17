@@ -11,7 +11,7 @@ const fancyRender = (time, color) => {
   asciimo.write(time, FONT, (art) => {
     clear()
     process.stdout.write('\r\n')
-    util.puts(color === 'red' ? art.red : art.green)
+    util.puts(art[color])
     asciimo.write(time, FONT, (art) => {})
   })
 }
