@@ -13,6 +13,7 @@ program
   .option('-p, --plainText', 'remaining time will be displayed in a single line')
   .option('-P, --pomodoroColor <n>', 'timer color when pomodoro is running', 'red')
   .option('-B, --breakColor <n>', 'timer color when break is running', 'green')
+  .option('-T, --task <task>', 'task in progress of this pomodoro - displayed with timer on plain')
   .parse(process.argv);
 
 const REFRESH_RATE = 250; // ms
@@ -96,7 +97,8 @@ const timer = setInterval(() => {
   if (now.isBefore(timerEnd)) {
     render(
         formatTime(now, timerEnd),
-        timerColours[state]
+        timerColours[state],
+        program.task
     );
   } else {
     state = nextState(state);

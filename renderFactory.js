@@ -5,6 +5,8 @@ const asciimo = require('asciimo').Figlet
 const clear   = require('clear')
 const colors = require('colors/safe')
 
+const message = (time, task) => `${time}${task.length ? ` - ${task}`: ''}`;
+
 const fancyRender = (time, color) => {
   const FONT = 'Colossal'
   clear()
@@ -16,9 +18,9 @@ const fancyRender = (time, color) => {
   })
 }
 
-const plainRender = (time, color) => {
+const plainRender = (time, color, task = '') => {
   clear()
-  console.log(colors[color](time))
+  console.log(colors[color](message(time, task)))
 }
 
 module.exports = ({plainText}) => plainText ? plainRender : fancyRender
