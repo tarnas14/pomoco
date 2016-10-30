@@ -5,14 +5,15 @@ const moment  = require('moment');
 const colors  = require('colors');
 const notifier = require('node-notifier');
 const program = require('commander');
+
 const renderFactory = require('./renderFactory');
 
 program
   .usage('<pomodoroLength> <breakLength> [options]')
   .option('-b, --startWithBreak', 'will start counting time from break')
-  .option('-p, --plainText', 'remaining time will be displayed in a single line')
-  .option('-P, --pomodoroColor <n>', 'timer color when pomodoro is running', 'red')
-  .option('-B, --breakColor <n>', 'timer color when break is running', 'green')
+  .option('-a, --ascii', 'remaining time will be displayed via big ascii art font')
+  .option('-P, --pomodoroColor <n>', 'timer color when pomodoro is running', 'cyan')
+  .option('-B, --breakColor <n>', 'timer color when break is running', 'yellow')
   .option('-T, --task <task>', 'task in progress of this pomodoro - displayed with timer on plain')
   .parse(process.argv);
 

@@ -23,4 +23,4 @@ const plainRender = (time, color, task = '') => {
   console.log(colors[color](message(time, task)))
 }
 
-module.exports = ({plainText}) => plainText ? plainRender : fancyRender
+module.exports = ({ascii}) => ascii ? fancyRender : plainRender
